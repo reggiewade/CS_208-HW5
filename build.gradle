@@ -1,9 +1,11 @@
 plugins {
-	id 'java'
+	id 'application'
 	id 'org.springframework.boot' version '2.7.15'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 }
 
+
+mainClassName = 'cs208.Main'
 group = 'cs208'
 version = '0.0.1-SNAPSHOT'
 
@@ -25,4 +27,8 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+run {
+    standardInput = System.in
 }
