@@ -346,8 +346,41 @@ public class Database
     }
 
 
+    public Student getStudentWithId(int id) {
+        String sql = 
+                "SELECT id, first_name, last_name, birth_date\n" +
+                "FROM students\n" + 
+                "WHERE id = ?;";
+        try 
+        (
+            Connection connection = getDatabaseConnection();
+            PreparedStatement sqlStatement = connection.prepareStatement(sql);
+        )
+        {
+            sqlStatement.setInt(1, id);
 
+            ResultSet resultSet = sqlStatement.executeQuery();
 
+            if (resultSet.next() == false) {
+                System.out.println("No student with id = " + id);
+                return null;
+            }
+
+            int idOfStudent = resultSet.getInt("id");
+            String firstName = resultSet.getString("first_name");
+            String lastName = resultSet.getString("last_name");
+            Date birthDate = resultSet.getDate("birth_date");
+            return new Student(idOfStudent, firstName, lastName, birthDate);
+
+        }
+        catch (SQLException sqlException)
+        {
+            System.out.println("!!! SQLException: failed to query the students table. Make sure you executed the schema.sql and seeds.sql scripts");
+            System.out.println(sqlException.getMessage());
+
+            return null;
+        }
+    }
 
 
 
@@ -391,6 +424,8 @@ public class Database
         }
     }
 
+    
+
     private void printTableHeader(String[] listOfColumnNames)
     {
         System.out.print("| ");
@@ -402,3 +437,5 @@ public class Database
         System.out.println(Utils.characterRepeat('-', 80));
     }
 }
+
+
