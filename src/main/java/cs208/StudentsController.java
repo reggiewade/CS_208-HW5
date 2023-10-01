@@ -32,16 +32,8 @@ public class StudentsController
     {
         List<Student> listOfStudents = Main.database.listAllStudents();
 
-        // because we used the following annotation:
-        //      produces = MediaType.APPLICATION_JSON_VALUE
-        // in the method declaration, when we return the listOfClasses object,
-        // the internal libraries of the Spring framework will automatically
-        // convert the listOfClasses object to a JSON array of class objects
-        // and return it to the client
         return listOfStudents;
     }
-
-
 
     /**
      * GET /students/{id}
@@ -50,7 +42,25 @@ public class StudentsController
      *
      * @throws ResponseStatusException: a 404 status code if the student with id = {id} does not exist
      */
-    // TODO: implement this route
+    @GetMapping(value = "/students/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Student show(@PathVariable("id") int id)
+    {
+        System.out.println("id = " + id);
+
+        Student studentWithID = Main.database.getStudentWithId(id);
+        if (studentWithID == null)
+        {
+            System.out.println("No class with id " + id + " exists.");
+
+            // return 404 status code (i.e., error that the student was not found)
+            throw new ResponseStatusException(
+                    HttpStatus.NOT_FOUND,
+                    "class with id " + id + " not found"
+            );
+        }
+
+        return studentWithID;
+    }
 
 
 
