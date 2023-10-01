@@ -21,7 +21,7 @@ import java.util.List;
 public class StudentsController
 {
 
-    //http://localhost:8080/classes
+    //http://localhost:8080/students
     /**
      * GET /students
      *
