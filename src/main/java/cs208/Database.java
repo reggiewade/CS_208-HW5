@@ -382,8 +382,52 @@ public class Database
         }
     }
 
+    public Student addNewStudent(Student newStudent) throws SQLException
+    {
+        String sql = 
+                "INSERT INTO students (id, first_name, last_name, birth_date" +
+                "VALUES (?, ?, ?, ?);";
 
+        try (
+            Connection connection = getDatabaseConnection();
+            PreparedStatement sqlStatement = connection.prepareStatement(sql);
+        )
+        {
+            sqlStatement.setInt(1, newStudent.getId());
+            sqlStatement.setString(2, newStudent.getFirstName());
+            sqlStatement.setString(3, newStudent.getLastName());
+            sqlStatement.setString(4, newStudent.getBirthDate().toString());
+            
+            int numberOfRowsAffected = sqlStatement.executeUpdate();
+            System.out.println("numberOfRowsAffected = " + numberOfRowsAffected);
 
+            if (numberOfRowsAffected > 0)
+            {
+                ResultSet resultSet = sqlStatement.getGeneratedKeys();
+
+                while (resultSet.next())
+                {
+                    // "last_insert_rowid()" is the column name that contains the id of the last inserted row
+                    // alternatively, we could have used resultSet.getInt(1); to get the id of the first column returned
+                    int generatedIdForTheNewlyInsertedStudent = resultSet.getInt("last_insert_rowid()");
+                    System.out.println("SUCCESSFULLY inserted a new class with id = " + generatedIdForTheNewlyInsertedStudent);
+
+                    // this can be useful if we need to make additional processing on the newClass object
+                    newStudent.setId(generatedIdForTheNewlyInsertedStudent);
+                }
+
+                resultSet.close();
+            }
+        }
+        catch (SQLException sqlException)
+        {
+            System.out.println("!!! SQLException: failed to insert into the classes table");
+            System.out.println(sqlException.getMessage());
+            throw sqlException;
+        }
+
+        return newStudent;
+    }
 
     public Class getClassWithId(int id)
     {
@@ -424,7 +468,7 @@ public class Database
         }
     }
 
-    
+
 
     private void printTableHeader(String[] listOfColumnNames)
     {
