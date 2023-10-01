@@ -21,12 +21,25 @@ import java.util.List;
 public class StudentsController
 {
 
+    //http://localhost:8080/classes
     /**
      * GET /students
      *
      * @return a list of students (extracted from the students table in the database) as JSON
      */
-    // TODO: implement this route
+    @GetMapping(value = "/students", produces = MediaType.APPLICATION_JSON_VALUE)
+    List<Student> index()
+    {
+        List<Student> listOfStudents = Main.database.listAllStudents();
+
+        // because we used the following annotation:
+        //      produces = MediaType.APPLICATION_JSON_VALUE
+        // in the method declaration, when we return the listOfClasses object,
+        // the internal libraries of the Spring framework will automatically
+        // convert the listOfClasses object to a JSON array of class objects
+        // and return it to the client
+        return listOfStudents;
+    }
 
 
 
