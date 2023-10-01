@@ -429,6 +429,78 @@ public class Database
         return newStudent;
     }
 
+    public void updateExistingStudentInformation(Student studentToUpdate) throws SQLException
+    {
+        String sql =
+                "UPDATE students\n" +
+                "SET first_name = ?, last_name = ?, birth_date = ?\n" +
+                "WHERE id = ?;";
+
+        try
+        (
+            Connection connection = getDatabaseConnection();
+            PreparedStatement sqlStatement = connection.prepareStatement(sql);
+        )
+        {
+            sqlStatement.setString(1, studentToUpdate.getFirstName());
+            sqlStatement.setString(2, studentToUpdate.getLastName());
+            sqlStatement.setString(3, studentToUpdate.getBirthDate().toString());
+            sqlStatement.setInt(4, studentToUpdate.getId());
+
+            int numberOfRowsAffected = sqlStatement.executeUpdate();
+            System.out.println("numberOfRowsAffected = " + numberOfRowsAffected);
+
+            if (numberOfRowsAffected > 0)
+            {
+                System.out.println("SUCCESSFULLY updated the student with id = " + studentToUpdate.getId());
+            }
+            else
+            {
+                System.out.println("!!! WARNING: failed to update the class with id = " + studentToUpdate.getId());
+            }
+        }
+        catch (SQLException sqlException)
+        {
+            System.out.println("!!! SQLException: failed to update the class with id = " + studentToUpdate.getId());
+            System.out.println(sqlException.getMessage());
+            throw sqlException;
+        }
+    }
+
+    public void deleteExistingStudent(int idOfStudentToDelete) throws SQLException
+    {
+        String sql =
+                "DELETE FROM students\n" +
+                "WHERE id = ?;";
+
+        try
+        (
+            Connection connection = getDatabaseConnection();
+            PreparedStatement sqlStatement = connection.prepareStatement(sql);
+        )
+        {
+            sqlStatement.setInt(1, idOfStudentToDelete);
+
+            int numberOfRowsAffected = sqlStatement.executeUpdate();
+            System.out.println("numberOfRowsAffected = " + numberOfRowsAffected);
+
+            if (numberOfRowsAffected > 0)
+            {
+                System.out.println("SUCCESSFULLY deleted the student with id = " + idOfStudentToDelete);
+            }
+            else
+            {
+                System.out.println("!!! WARNING: failed to delete the student with id = " + idOfStudentToDelete);
+            }
+        }
+        catch (SQLException sqlException)
+        {
+            System.out.println("!!! SQLException: failed to delete the studnet with id = " + idOfStudentToDelete);
+            System.out.println(sqlException.getMessage());
+            throw sqlException;
+        }
+    }
+
     public Class getClassWithId(int id)
     {
         String sql =
