@@ -177,7 +177,56 @@ public class StudentsController
      *
      * @throws ResponseStatusException: a 404 status code if the student with id = {id} does not exist
      */
-    // TODO: implement this route
+    @PatchMapping(value = "/student/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    Student updatePatch(
+            @PathVariable("id") int id,
+            @RequestParam(value = "first_name", required = false) String firstName,
+            @RequestParam(value = "last_name", required = false) String lastName,
+            @RequestParam(value = "birth_date", required = false) String birthDate
+    )
+    {
+        System.out.println("id          = " + id);
+        System.out.println("first_name        = " + firstName);
+        System.out.println("last_name       = " + lastName);
+        System.out.println("birth_date = " + birthDate);
+
+        try
+        {
+            Student studentToUpdate = Main.database.getStudentWithId(id);
+            if (studentToUpdate == null)
+            {
+                throw new ResponseStatusException(
+                        HttpStatus.NOT_FOUND,
+                        "failed to update the student with id = " + id + " in the database because it does not exist"
+                );
+            }
+
+            if (firstName != null)
+            {
+                studentToUpdate.setFirstName(firstName);
+            }
+
+            if (lastName != null)
+            {
+                studentToUpdate.setLastName(lastName);
+            }
+
+            if (birthDate != null)
+            {
+                studentToUpdate.setBirthDate(Date.valueOf(birthDate));;
+            }
+
+            Main.database.updateExistingStudentInformation(studentToUpdate);
+            return studentToUpdate;
+        }
+        catch (SQLException e)
+        {
+            throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY, // 422 error code
+                    "failed to update the student with id = " + id + " in the database"
+            );
+        }
+    }
 
 
 
