@@ -369,8 +369,8 @@ public class Database
             int idOfStudent = resultSet.getInt("id");
             String firstName = resultSet.getString("first_name");
             String lastName = resultSet.getString("last_name");
-            Date birthDate = resultSet.getDate("birth_date");
-            return new Student(idOfStudent, firstName, lastName, birthDate);
+            String birthDate = resultSet.getString("birth_date");
+            return new Student(idOfStudent, firstName, lastName, Date.valueOf(birthDate));
 
         }
         catch (SQLException sqlException)
@@ -385,18 +385,17 @@ public class Database
     public Student addNewStudent(Student newStudent) throws SQLException
     {
         String sql = 
-                "INSERT INTO students (id, first_name, last_name, birth_date" +
-                "VALUES (?, ?, ?, ?);";
+                "INSERT INTO students (first_name, last_name, birth_date)" +
+                "VALUES (?, ?, ?);";
 
         try (
             Connection connection = getDatabaseConnection();
             PreparedStatement sqlStatement = connection.prepareStatement(sql);
         )
         {
-            sqlStatement.setInt(1, newStudent.getId());
-            sqlStatement.setString(2, newStudent.getFirstName());
-            sqlStatement.setString(3, newStudent.getLastName());
-            sqlStatement.setString(4, newStudent.getBirthDate().toString());
+            sqlStatement.setString(1, newStudent.getFirstName());
+            sqlStatement.setString(2, newStudent.getLastName());
+            sqlStatement.setString(3, newStudent.getBirthDate().toString());
             
             int numberOfRowsAffected = sqlStatement.executeUpdate();
             System.out.println("numberOfRowsAffected = " + numberOfRowsAffected);
