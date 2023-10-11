@@ -42,7 +42,28 @@ public class RegisteredStudentsController
      * The parameters passed in the body of the POST request will be inserted
      * into the registered_students table in the database.
      */
-    // TODO: implement this route
+    @PostMapping(value = "/registered_students", produces = MediaType.APPLICATION_JSON_VALUE)
+    RegisteredStudent create (
+            @RequestParam("studentId") int studentId,
+            @RequestParam("classId") int classId
+    )
+    {
+        System.out.println("studentId = " + studentId);
+        System.out.println("classId = " + classId);
+
+        try {
+            RegisteredStudent newRegisteredStudent = new RegisteredStudent(studentId, classId);
+            Main.database.addStudentToClass(newRegisteredStudent);
+            return newRegisteredStudent;
+        } catch (SQLException e) {
+            throw new ResponseStatusException(
+                    HttpStatus.UNPROCESSABLE_ENTITY, // 422 error code
+                    "failed to add student: " + studentId + " to class: " + classId 
+            );
+        }
+        
+    }
+
 
 
 
