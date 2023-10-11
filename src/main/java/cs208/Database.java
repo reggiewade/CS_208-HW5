@@ -551,6 +551,67 @@ public class Database
         System.out.println();
         System.out.println(Utils.characterRepeat('-', 80));
     }
+
+    public void addStudentToClass (RegisteredStudent theNewStudent) throws SQLException {
+        String sql = 
+                "INSERT INTO registered_students (student_id, class_id)\n" +
+                "VALUES (?, ?);";
+        try
+        (
+            Connection connection = getDatabaseConnection();
+            PreparedStatement sqlStatement = connection.prepareStatement(sql);
+        )
+
+        {
+            sqlStatement.setInt(1, theNewStudent.getStudentId());
+            sqlStatement.setInt(2, theNewStudent.getClassId());
+
+            int numberOfRowsAffected = sqlStatement.executeUpdate();
+            System.out.println("numberOfRowsAffected = " + numberOfRowsAffected);
+
+            if (numberOfRowsAffected > 0 ) 
+            {
+                System.out.println("SUCCESSFULLY inserted student: " + theNewStudent.getStudentId() + " into class: " + theNewStudent.getClassId());
+            }
+            else
+            {
+                System.out.println("!!! WARNING: failed to insert student into the class");
+            }
+        }
+        catch (SQLException sqlException) {
+            System.out.println("!!! SQLException: failed to insert student into the class");
+            System.out.println(sqlException.getMessage());
+            throw sqlException;
+        }          
+    }
+
+    public void dropExistingStudentFromClass (int studentId, int classId) {
+        String sql = 
+                "DELETE FROM registered_students\n" +
+                "WHERE student_id = ? AND class_id = ?;";
+        try (
+            Connection connection = getDatabaseConnection();
+            PreparedStatement sqlStatement = connection.prepareStatement(sql);
+        )
+        {
+            sqlStatement.setInt(1, studentId);
+            sqlStatement.setInt(2, classId);
+
+            int numberOfRowsAffected = sqlStatement.executeUpdate();
+            System.out.println("numberOfRowsAffected = " + numberOfRowsAffected);
+
+            if (numberOfRowsAffected > 0 ) 
+            {
+                System.out.println("SUCCESSFULLY removed student: " + studentId + " from class: " + classId);
+            }
+            else
+            {
+                System.out.println("!!! WARNING: failed to insert student into the class");
+            }
+        }
+        catch (SQLException sqlException) {
+            System.out.println("!!! SQLException: failed to remove student: " + studentId + " from class: " + classId);
+            System.out.println(sqlException.getMessage());
+        }
+    }
 }
-
-
