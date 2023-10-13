@@ -585,7 +585,7 @@ public class Database
         }          
     }
 
-    public void dropExistingStudentFromClass (int studentId, int classId) {
+    public void dropExistingStudentFromClass (RegisteredStudent studentDropped) {
         String sql = 
                 "DELETE FROM registered_students\n" +
                 "WHERE student_id = ? AND class_id = ?;";
@@ -594,15 +594,15 @@ public class Database
             PreparedStatement sqlStatement = connection.prepareStatement(sql);
         )
         {
-            sqlStatement.setInt(1, studentId);
-            sqlStatement.setInt(2, classId);
+            sqlStatement.setInt(1, studentDropped.getStudentId());
+            sqlStatement.setInt(2, studentDropped.getClassId());
 
             int numberOfRowsAffected = sqlStatement.executeUpdate();
             System.out.println("numberOfRowsAffected = " + numberOfRowsAffected);
 
             if (numberOfRowsAffected > 0 ) 
             {
-                System.out.println("SUCCESSFULLY removed student: " + studentId + " from class: " + classId);
+                System.out.println("SUCCESSFULLY removed student: " + studentDropped.getStudentId() + " from class: " + studentDropped.getClassId());
             }
             else
             {
@@ -610,7 +610,7 @@ public class Database
             }
         }
         catch (SQLException sqlException) {
-            System.out.println("!!! SQLException: failed to remove student: " + studentId + " from class: " + classId);
+            System.out.println("!!! SQLException: failed to remove student: " + studentDropped.getStudentId() + " from class: " + studentDropped.getClassId());
             System.out.println(sqlException.getMessage());
         }
     }

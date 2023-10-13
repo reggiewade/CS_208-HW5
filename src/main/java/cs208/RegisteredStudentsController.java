@@ -63,10 +63,6 @@ public class RegisteredStudentsController
         }
         
     }
-
-
-
-
     /**
      * DELETE /drop_student_from_class
      * with the following form parameters:
@@ -79,7 +75,19 @@ public class RegisteredStudentsController
      * @throws ResponseStatusException: a 404 status code if the student with id = {studentId} does not exist
      * @throws ResponseStatusException: a 404 status code if the class with id = {classId} does not exist
      */
-    // TODO: implement this route
+    @DeleteMapping(value="/drop_student_from_class", produces = MediaType.APPLICATION_JSON_VALUE)
+    RegisteredStudent delete (
+            @PathVariable("student_id") int studentId,
+            @PathVariable("class_id") int classId
+    ) throws SQLException
+    {
+        System.out.println("student_id = " + studentId);
+        System.out.println("class_id = " + classId);
+
+        RegisteredStudent studentToDelete = new RegisteredStudent(studentId, classId);
+        Main.database.dropExistingStudentFromClass(studentToDelete);
+        return studentToDelete;
+    }
 
 
 
