@@ -75,7 +75,7 @@ public class RegisteredStudentsController
      * @throws ResponseStatusException: a 404 status code if the student with id = {studentId} does not exist
      * @throws ResponseStatusException: a 404 status code if the class with id = {classId} does not exist
      */
-    @DeleteMapping(value="/drop_student_from_class", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value="/drop_student_from_class/{student_id}/{class_id}", produces = MediaType.APPLICATION_JSON_VALUE)
     RegisteredStudent delete (
             @PathVariable("student_id") int studentId,
             @PathVariable("class_id") int classId

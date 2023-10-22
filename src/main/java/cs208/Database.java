@@ -606,7 +606,7 @@ public class Database
             }
             else
             {
-                System.out.println("!!! WARNING: failed to insert student into the class");
+                System.out.println("!!! WARNING: failed to remove student from the class");
             }
         }
         catch (SQLException sqlException) {
